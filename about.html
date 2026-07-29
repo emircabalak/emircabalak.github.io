@@ -26,11 +26,19 @@
 
   <p>I am Emir Cabalak. I build machine learning models and then try to break my own results
   before anyone else does.</p>
-  <p>Most of my work so far is on search and analytics data at FlyRank, where I spend more time
-  on how a model is evaluated than on which model it is. I am the person on a team who asks
-  where the split came from.</p>
-  <p>The three cases on this site are the same story told three ways: a number that looked good
-  was good for the wrong reason, and finding out cost me the number.</p>
+  <p>I have worked across fairly different problems: 3D object detection on LiDAR where the
+  model reports how unsure it is, industrial anomaly detection, reinforcement learning, image
+  processing, and a handful of hackathons and datathons. Some of that is coursework and some of
+  it is mine. Most of it is public on
+  <a href="https://github.com/emircabalak">GitHub</a>, roughly two dozen repositories.</p>
+  <p>I am currently interning at FlyRank, on search and analytics data. The three cases on this
+  site come from there, because it is the most recent work and the one where my mistakes were
+  the most instructive. It is not the largest part of what I have built.</p>
+  <p>The thread through all of it is one question: does this number mean what it looks like it
+  means. On the KITTI work that meant making the model report its own uncertainty instead of
+  handing back a confident box. Here it means checking whether my evaluation measures what I
+  think it measures. Same habit, different problem.</p>
+  <p>I am the person on a team who asks where the split came from.</p>
 
   <h2>How I work</h2>
   <p>These are not aspirations. Each one is a rule I follow because breaking it cost me
@@ -48,9 +56,28 @@
     <li>Say what the work does not show. Every case here has a section for that.</li>
   </ul>
 
+  <h2>Other work</h2>
+  <p>The three cases above are written up because I can explain every decision in them. These
+  are not written up, and they are the bulk of what I have actually built.</p>
+  <ul>
+    <li><a href="https://github.com/emircabalak/uncertainty-aware-3d-detection">Uncertainty-aware
+    3D detection</a>. KITTI LiDAR, evidential deep learning, epistemic and aleatoric uncertainty
+    per detection. Two variants: a CenterPoint backbone trained from scratch and a pretrained
+    PointPillars with an evidential head. The README has a limitations section, which is the
+    part I would point at.</li>
+    <li><a href="https://github.com/emircabalak/Endustriyel-Anomali-Tespiti">Industrial anomaly
+    detection</a>.</li>
+    <li><a href="https://github.com/emircabalak/LayoutTransformer-UI-Generator">LayoutTransformer
+    UI generator</a>.</li>
+    <li><a href="https://github.com/emircabalak/Reinforcement_Projects">Reinforcement learning
+    projects</a>.</li>
+    <li><a href="https://github.com/emircabalak/flyrank-ml-internship">FlyRank ML internship</a>,
+    the notebooks the first two cases come from.</li>
+  </ul>
+
   <h2>Tools</h2>
-  <p>Python, pandas, scikit-learn, SQL, notebooks, git. Nothing exotic. The interesting part of
-  this work has never been the library.</p>
+  <p>Python, pandas, scikit-learn, PyTorch, SQL, notebooks, git. Some C and C++ from earlier
+  coursework. Nothing exotic. The interesting part of this work has never been the library.</p>
 
   <h2>Contact</h2>
   <p>Email: <a href="mailto:emircabalak1@gmail.com">emircabalak1@gmail.com</a><br>
