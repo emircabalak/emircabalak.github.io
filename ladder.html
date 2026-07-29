@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The prompt ladder, including the rung that broke &middot; Emir Cabalak</title>
+<meta name="description" content="Six versions of one prompt, one change per version. Version four made the output worse and it stays on the page.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a class="home" href="index.html">Emir Cabalak</a>
+  <a href="leak.html">Leak</a>
+  <a href="split.html">Split</a>
+  <a href="ladder.html" aria-current="page">Ladder</a>
+  <a href="about.html">About</a>
+</nav>
+
+<main>
+  <img class="case-icon" src="icon-ladder.svg" alt="" width="48" height="48">
+  <p class="kicker">Case 3</p>
+  <h1>The prompt ladder, including the rung that broke</h1>
+
+  <h2>The problem</h2>
+  <p>I was using AI badly and getting away with it. My prompts worked well enough that I never
+  learned which part of them was doing the work, which meant I could not repeat a good result
+  on purpose and could not fix a bad one except by rewriting the whole thing.</p>
+  <p>The task I tested it on is real and it is the same task as <a href="leak.html">case 1</a>:
+  given a list of columns and a label definition, decide which columns are safe to use as
+  features.</p>
+
+  <h2>What I did</h2>
+  <p>Six runs. One weak baseline, then five versions, each adding exactly one layer, each
+  attacking whatever was worst about the previous output. Every output saved and compared side
+  by side rather than from memory.</p>
+  <p>The rule that made it worth doing was one change per version. Change two things and an
+  improvement tells you nothing about which one caused it.</p>
+
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr><th>Version</th><th>Layer added</th><th>Effect</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Baseline</td><td>none, "explain this data"</td><td>useless</td></tr>
+      <tr><td>V1</td><td>a clearer goal</td><td>found the right concept, still generic</td></tr>
+      <tr><td>V2</td><td>real context</td><td>the big one</td></tr>
+      <tr><td>V3</td><td>a specified output format</td><td>made it checkable</td></tr>
+      <tr><td>V4</td><td>examples of what good looks like</td><td>made it worse</td></tr>
+      <tr><td>V5</td><td>verification requirements</td><td>recovered, and beat V3</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>The version that broke</h2>
+  <p>V4 is the reason this case is on the site.</p>
+  <p>I gave it two example rows from a good version of the same table on a different dataset,
+  expecting it to raise the quality of the reasoning. Instead it copied the reasoning. Five of
+  eight columns came back with the identical phrase from my examples, "fixed at collection
+  time, cannot change after," including one column that V3 had correctly flagged as a problem.</p>
+  <p>Worse, my two examples happened to use only two verdicts, safe and unsafe. The
+  <em>conditional</em> category disappeared from the output entirely, because nothing in my
+  examples demonstrated it. And because my examples came from a dataset where the danger was a
+  single column, it went looking for a single column here, marked one half of the leaking pair
+  unsafe and the other half safe, and missed the actual risk.</p>
+  <p>Examples do not just show quality. They narrow the search, and they silently delete any
+  category they do not contain. On a task where I already know the shape of the answer that is
+  fine. On a task where I am hoping to be told something I missed, it is the wrong tool.</p>
+  <p>I kept V4 in the ladder. A ladder where all five rungs improve is a ladder that was not
+  tested hard enough.</p>
+
+  <h2>What actually earned its place</h2>
+  <p><strong>Context.</strong> V2 was the only step that changed the answer's category rather
+  than its degree. Once it had the real column names, the real label definition, and the three
+  quirks in the data, it found the numerator and denominator pair on its own. If I could keep
+  one layer this is it, and it is not close.</p>
+  <p><strong>Verification.</strong> The layer I nearly skipped because it looked like
+  politeness. Asking the model to argue against its own "safe" verdicts produced a backfill
+  scenario that is a real failure mode in our warehouse, and it self-corrected the exact cell
+  V3 had got wrong. Asking a model to attack its own answer is not politeness. It was the only
+  step that turned a wrong cell into a right one.</p>
+
+  <h2>What came of it</h2>
+  <p>A prompt someone else can run without me in the room. I tested that claim on a dataset the
+  prompt was not designed around, a support-ticket table with a "resolved within SLA" label. It
+  found the created-at and resolved-at pair without being told to look for a pair, and flagged
+  the assignee column as conditional because reassignment can happen after the outcome. Both
+  correct.</p>
+  <p>The final version drops the examples layer. Four of five layers made it into the keeper,
+  and knowing which one to leave out is most of what the exercise bought me.</p>
+
+  <div class="pending">
+  Screenshot of the V3 and V4 outputs side by side goes here. The full ladder with all six
+  prompts and outputs is in the writeup.
+  </div>
+
+  <p class="next"><a href="mailto:emircabalak1@gmail.com">If you want the code or the full
+  prompt behind anything on this site, email me.</a></p>
+</main>
+
+<footer>
+  <a href="mailto:emircabalak1@gmail.com">emircabalak1@gmail.com</a> &middot;
+  <a href="https://github.com/emircabalak">GitHub</a> &middot; 2026
+</footer>
+
+</body>
+</html>

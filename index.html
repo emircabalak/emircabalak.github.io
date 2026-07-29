@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emir Cabalak</title>
+<meta name="description" content="I build machine learning models and then try to break my own results before anyone else can.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a class="home" href="index.html" aria-current="page">Emir Cabalak</a>
+  <a href="leak.html">Leak</a>
+  <a href="split.html">Split</a>
+  <a href="ladder.html">Ladder</a>
+  <a href="about.html">About</a>
+</nav>
+
+<main>
+  <h1>Emir Cabalak</h1>
+  <p class="claim">I build machine learning models and then try to break my own results before anyone else can.</p>
+
+  <img class="hero" src="hero-texture.svg" alt="" width="1200" height="420">
+
+  <div class="lead">
+    <h2 style="margin-top:0">The two columns that rebuilt my label</h2>
+    <p>My classifier scored 0.91 and the problem did not deserve 0.91. I went through the
+    feature list one column at a time and found two that were individually harmless and
+    together rebuilt the thing I was predicting. Removing them cost me seven points of AUC.</p>
+    <p class="cta"><a href="leak.html">Read the leakage case. It is the one where my score
+    went down and I kept the lower number.</a></p>
+  </div>
+
+  <h2>Two more</h2>
+  <ul class="more">
+    <li>
+      <img src="icon-split.svg" alt="" width="28" height="28">
+      <span>
+        <a href="split.html">The split that was lying to me</a>
+        <span class="sub">The leak was gone and the evaluation was still wrong. Three numbers, and I publish all three.</span>
+      </span>
+    </li>
+    <li>
+      <img src="icon-ladder.svg" alt="" width="28" height="28">
+      <span>
+        <a href="ladder.html">The prompt ladder, including the rung that broke</a>
+        <span class="sub">Six versions of one prompt, one change each. Version four made the output worse and I kept it.</span>
+      </span>
+    </li>
+  </ul>
+
+  <h2>Who is writing this</h2>
+  <p>I work on search and analytics data at FlyRank, mostly on how models get evaluated rather
+  than which model gets used. <a href="about.html">More about me</a>.</p>
+</main>
+
+<footer>
+  <a href="mailto:emircabalak1@gmail.com">emircabalak1@gmail.com</a> &middot;
+  <a href="https://github.com/emircabalak">GitHub</a> &middot; 2026
+</footer>
+
+</body>
+</html>

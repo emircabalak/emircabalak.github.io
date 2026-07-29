@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About &middot; Emir Cabalak</title>
+<meta name="description" content="Emir Cabalak, machine learning, mostly on how models get evaluated rather than which model gets used.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a class="home" href="index.html">Emir Cabalak</a>
+  <a href="leak.html">Leak</a>
+  <a href="split.html">Split</a>
+  <a href="ladder.html">Ladder</a>
+  <a href="about.html" aria-current="page">About</a>
+</nav>
+
+<main>
+  <h1>About</h1>
+
+  <div class="pending">Portrait goes here. A real photograph, not a generated one, for reasons
+  that would be obvious on a site making this particular argument.</div>
+
+  <p>I am Emir Cabalak. I build machine learning models and then try to break my own results
+  before anyone else does.</p>
+  <p>Most of my work so far is on search and analytics data at FlyRank, where I spend more time
+  on how a model is evaluated than on which model it is. I am the person on a team who asks
+  where the split came from.</p>
+  <p>The three cases on this site are the same story told three ways: a number that looked good
+  was good for the wrong reason, and finding out cost me the number.</p>
+
+  <h2>How I work</h2>
+  <p>These are not aspirations. Each one is a rule I follow because breaking it cost me
+  something specific, and each one shows up in at least one of the cases.</p>
+  <ul>
+    <li>Leakage is a property of the time window, not a list of column names. A blacklist
+    protects you from the columns you already caught.</li>
+    <li>Grouped splits when the data has entities, time-aware splits when it has a time axis,
+    and both when it has both.</li>
+    <li>Publish the flattering number next to the honest one. The gap is a finding.</li>
+    <li>Every metric is quoted from the run that produced it. Never recomputed on a refit that
+    trained on the rows it is scoring.</li>
+    <li>A precision-style figure without its base rate next to it is not a figure.</li>
+    <li>Disclose the population filter. How the rows were chosen is part of the result.</li>
+    <li>Say what the work does not show. Every case here has a section for that.</li>
+  </ul>
+
+  <h2>Tools</h2>
+  <p>Python, pandas, scikit-learn, SQL, notebooks, git. Nothing exotic. The interesting part of
+  this work has never been the library.</p>
+
+  <h2>Contact</h2>
+  <p>Email: <a href="mailto:emircabalak1@gmail.com">emircabalak1@gmail.com</a><br>
+  GitHub: <a href="https://github.com/emircabalak">github.com/emircabalak</a></p>
+  <p>If you want the code or the metrics file behind any number on this site, ask and I will
+  send it.</p>
+
+  <p class="next"><a href="leak.html">If you landed here first, start with the leakage
+  case.</a></p>
+</main>
+
+<footer>
+  <a href="mailto:emircabalak1@gmail.com">emircabalak1@gmail.com</a> &middot;
+  <a href="https://github.com/emircabalak">GitHub</a> &middot; 2026
+</footer>
+
+</body>
+</html>

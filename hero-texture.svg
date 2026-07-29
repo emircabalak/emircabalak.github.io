@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" width="1200" height="420" role="img" aria-label="Faint scatter of points split by a vertical rule, the left side used for fitting and the right side held out">
+  <rect width="1200" height="420" fill="#FAF9F7"/>
+  <g stroke="#2E4B6B" stroke-width="1" opacity="0.10">
+    <path d="M0 60H1200M0 120H1200M0 180H1200M0 240H1200M0 300H1200M0 360H1200"/>
+    <path d="M60 0V420M180 0V420M300 0V420M420 0V420M540 0V420M660 0V420M780 0V420M900 0V420M1020 0V420M1140 0V420"/>
+  </g>
+  <g fill="#2E4B6B" opacity="0.42">
+    <circle cx="78" cy="322" r="4"/><circle cx="126" cy="298" r="4"/><circle cx="171" cy="306" r="4"/>
+    <circle cx="214" cy="271" r="4"/><circle cx="262" cy="284" r="4"/><circle cx="305" cy="249" r="4"/>
+    <circle cx="349" cy="258" r="4"/><circle cx="397" cy="230" r="4"/><circle cx="441" cy="241" r="4"/>
+    <circle cx="486" cy="212" r="4"/><circle cx="529" cy="224" r="4"/><circle cx="574" cy="197" r="4"/>
+    <circle cx="618" cy="205" r="4"/><circle cx="661" cy="184" r="4"/><circle cx="706" cy="191" r="4"/>
+  </g>
+  <g fill="#C2410C" opacity="0.42">
+    <circle cx="796" cy="205" r="4"/><circle cx="841" cy="188" r="4"/><circle cx="884" cy="214" r="4"/>
+    <circle cx="929" cy="179" r="4"/><circle cx="972" cy="206" r="4"/><circle cx="1017" cy="185" r="4"/>
+    <circle cx="1061" cy="211" r="4"/><circle cx="1104" cy="176" r="4"/><circle cx="1148" cy="199" r="4"/>
+  </g>
+  <path d="M750 24V396" stroke="#16181D" stroke-width="1.5" stroke-dasharray="6 6" opacity="0.55"/>
+  <text x="736" y="392" text-anchor="end" fill="#16181D" opacity="0.5"
+        font-family="'IBM Plex Sans','Segoe UI',Helvetica,Arial,sans-serif" font-size="15">fit on this side</text>
+  <text x="764" y="392" fill="#C2410C" opacity="0.75"
+        font-family="'IBM Plex Sans','Segoe UI',Helvetica,Arial,sans-serif" font-size="15">score on this side</text>
+</svg>

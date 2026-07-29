@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The two columns that rebuilt my label &middot; Emir Cabalak</title>
+<meta name="description" content="A classifier scored better than the problem deserved. Two columns that were individually legal together rebuilt the label.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a class="home" href="index.html">Emir Cabalak</a>
+  <a href="leak.html" aria-current="page">Leak</a>
+  <a href="split.html">Split</a>
+  <a href="ladder.html">Ladder</a>
+  <a href="about.html">About</a>
+</nav>
+
+<main>
+  <img class="case-icon" src="icon-leak.svg" alt="" width="48" height="48">
+  <p class="kicker">Case 1</p>
+  <h1>The two columns that rebuilt my label</h1>
+
+  <h2>The problem</h2>
+  <p>I was building a classifier on FlyRank's search warehouse to flag which client sites were
+  about to lose visibility. The label is a threshold: a client is positive at month M if, at
+  month M+1, the share of their tracked queries that still return data falls below 0.6.</p>
+  <p>The first version scored 0.91 ROC AUC. That is where I stopped, because 0.91 is not a
+  plausible score on this problem. Search visibility moves for reasons that are not in my data
+  at all, including things the client does to their own site without telling anyone. A model
+  that confident is usually a model that has been told the answer.</p>
+
+  <h2>What I did</h2>
+  <p>I went through all 34 features one at a time and asked each one a single question: could
+  the value in this column have been written after the outcome I am trying to predict?</p>
+  <p>Most were fine. Two were not, and neither was obvious. The label is a ratio thresholded at
+  0.6. One of my features was the numerator of that ratio. Another was the denominator. They
+  sat in different tables, under different names, computed by different jobs, and I had added
+  them three weeks apart.</p>
+  <p>Individually, both are defensible. A month-M query count is a legitimate month-M feature.
+  Together, over a window that touched M+1, they reconstruct the exact quantity the label is a
+  threshold on. The model was not predicting the drop. It was reading it.</p>
+
+  <h2>The decision</h2>
+  <p>The easy fix is to delete those two column names and move on. I did not do that, and this
+  is the part of the case I would defend hardest.</p>
+  <p>A blacklist of two names protects you from those two names. The next feature someone adds,
+  or that I add in a month when I have forgotten this, can rebuild the same ratio out of
+  different columns. The failure was never about the names.</p>
+  <p>So I wrote the rule as a time rule instead: no feature may be computed from any window
+  that overlaps the outcome window, whatever it is called and whatever table it lives in. Then
+  I applied that rule to all 34 columns rather than just to the two I had caught. It cost me
+  four more features I liked, on top of the two that started it.</p>
+  <p>The rule is the deliverable here, not the fix. It still holds for features that did not
+  exist when I wrote it, which a blacklist cannot do.</p>
+
+  <h2>The part I could have quietly dropped</h2>
+  <p>While checking the columns I also checked the population filter, which is the step people
+  skip because it does not look like a feature question.</p>
+  <p>It was not clean. The rows I was keeping had been selected using a minimum-activity
+  threshold that reads from the outcome window. That does not make the model worthless and it
+  is not the same class of problem as the ratio pair, but it does mean my evaluation population
+  was chosen with information the model does not get at prediction time.</p>
+  <p>I could have said nothing. Nobody had asked, and the numbers below would look the same. It
+  is written into the notebook and into this page instead, because a caveat a reader finds
+  themselves costs more than a caveat you hand them.</p>
+
+  <h2>What came of it</h2>
+  <div class="table-scroll">
+  <table>
+    <thead>
+      <tr><th>Feature set</th><th class="num">Features</th><th class="num">ROC AUC</th><th class="num">PR AUC</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Original, with the pair</td><td class="num">34</td><td class="num">0.91</td><td class="num">0.66</td></tr>
+      <tr><td>Pair removed only</td><td class="num">32</td><td class="num">0.87</td><td class="num">0.51</td></tr>
+      <tr><td>Full window rule applied</td><td class="num">28</td><td class="num">0.84</td><td class="num">0.42</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>Base rate is 0.19, so the 0.42 PR AUC on the honest feature set is a little over twice
+  chance. All three rows are the same model, the same rows, and the same random 5-fold split,
+  so the only thing changing is the feature set.</p>
+  <p>Seven points of ROC AUC and 24 points of PR AUC went away. That is the result. The 0.84
+  is the number I report, and the 0.91 stays on the page because a reader who cannot see what I
+  removed has no way to judge whether I removed enough.</p>
+  <p>One more thing this bought me that the table does not show. The four extra features the
+  window rule killed were never flagged by anything except the rule. If I had only deleted the
+  pair I found by hand, four leaky columns would still be in the model and it would still score
+  0.87, and I would have believed it.</p>
+
+  <div class="pending">
+  Screenshot of the feature verdict table goes here. Until it does, the numbers above are the
+  same ones the notebook produced and they are quoted from the metrics file rather than from
+  memory.
+  </div>
+
+  <p class="next"><a href="split.html">Case 2 is the other half of this: the leak was gone and
+  the evaluation was still lying to me.</a></p>
+</main>
+
+<footer>
+  <a href="mailto:emircabalak1@gmail.com">emircabalak1@gmail.com</a> &middot;
+  <a href="https://github.com/emircabalak">GitHub</a> &middot; 2026
+</footer>
+
+</body>
+</html>
