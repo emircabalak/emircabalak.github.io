@@ -139,7 +139,7 @@ figcaption { font-size: 0.875rem; opacity: 0.75; margin-top: 0.5rem; }
 
 /* about */
 
-.portrait { width: 160px; height: auto; border: 1px solid var(--rule); float: right; margin: 0 0 1rem 1.5rem; }
+.portrait { width: 160px; height: 160px; border-radius: 50%; float: right; margin: 0 0 1rem 1.5rem; }
 
 @media (max-width: 30rem) {
   .portrait { float: none; margin: 0 0 1.5rem; }
