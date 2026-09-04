@@ -24,6 +24,7 @@
   <h1>The split that was lying to me</h1>
 
   <h2>The problem</h2>
+  <p>The leak was gone and the evaluation was still wrong.</p>
   <p>Same warehouse, same model, and the leak from <a href="leak.html">case 1</a> already
   removed. The honest feature set scored 0.84 and I was ready to write it up.</p>
   <p>Then I looked at how the folds were built. Random 5-fold. My data is a panel: one row per
@@ -34,37 +35,38 @@
   the wrong thing, and it was measuring it very well.</p>
 
   <h2>What I did</h2>
-  <p>I rebuilt the evaluation twice.</p>
+  <p>I rebuilt the evaluation twice: once grouped by client, once ordered by time.</p>
   <p>First, grouped. <code>GroupKFold</code> on <code>client_id</code>, so no client appears on
   both sides of any fold. This answers the question I actually care about: given a client the
   model has never seen, can it call the drop?</p>
-  <p>Second, time aware. Training months end before validation months start. This matters
-  separately from grouping, because the panel grows over time and search behaviour in
+  <p>Second, time aware. Training months end before validation months start.</p>
+  <p>This matters separately from grouping. The panel grows over time, and search behaviour in
   month M+6 is not drawn from the same world as month M. A grouped split still lets the model
   learn from the future of the panel as a whole.</p>
   <p>Neither of these is clever. Both are one line of scikit-learn. The work was noticing.</p>
 
   <h2>Why all three numbers are on this page</h2>
-  <p>It would be easy to publish only the time-aware number and never mention that a random
-  split was ever run. It is the honest number, so quoting it alone is not lying exactly.</p>
-  <p>I publish all three because the gap between them is a finding in its own right, and it is
-  a finding about the data rather than about me. If the random and grouped numbers had come out
-  the same, that would say client identity carries almost no signal here, which would be worth
-  knowing. They did not come out the same, so it does.</p>
+  <p>Because the gap between them is itself the finding.</p>
+  <p>It would be easy to publish only the time-aware number and never mention the random split.
+  It is the honest number, so quoting it alone is not lying exactly.</p>
+  <p>But the gap is a fact about the data, not about me. If the random and the grouped numbers
+  had come out the same, that would mean client identity carries almost no signal here. They did
+  not, so it does.</p>
   <p>A reader who only sees 0.71 cannot tell whether I got there by careful evaluation or by
   having a weak model. A reader who sees all three can see the size of my own correction.</p>
 
   <h2>The window, and what it cost</h2>
-  <p>Fixing the time-aware split meant fixing the window, which is where the row count went.</p>
+  <p>The honest split is smaller. Here is where the rows went.</p>
   <p>Client history depth varies a lot in this panel. Some clients have three years, some have
-  four months, and a naive time split silently drops every client whose data starts after the
-  training window closes. So I checked when each client's data actually begins before choosing
-  the boundaries, and then accepted a smaller usable set rather than a boundary that quietly
-  excluded the newest clients.</p>
+  four months.</p>
+  <p>A naive time split silently drops every client whose data starts after the training window
+  closes. So I checked when each client's data actually begins before choosing the boundaries,
+  and took a smaller usable set over a boundary that quietly excluded the newest clients.</p>
   <p>The usable set went from 412 clients to 298 for the time-aware run. That is a real
   cost and it is the reason the time-aware figure sits on fewer rows than the other two.</p>
 
   <h2>What came of it</h2>
+  <p>Three numbers, and I quote the lowest one.</p>
   <div class="table-scroll">
   <table>
     <thead>
@@ -87,10 +89,10 @@
   changed. Every point of that came from fixing what I was measuring.</p>
 
   <h2>What I would not claim from this</h2>
-  <p>All three figures are cross-validation, not a held-out future month. Cross-validation with
-  a time-aware fold structure is closer to the real question than a random fold, and it is
-  still not the same as sealing a month away and never touching it. That run does not exist
-  yet. When it does, this page gets a fourth row, and the fourth row is the one that counts.</p>
+  <p>None of this is a held-out future month, and that is the number that would count.</p>
+  <p>All three figures come from cross-validation. A time-aware fold structure is closer to the
+  real question than a random fold, and it is still not the same as sealing a month away and
+  never touching it. That run does not exist yet. When it does, this page gets a fourth row.</p>
   <p>I have also not checked whether a handful of large clients dominate the folds. With 412
   clients of very different sizes, they might. That check is on my list and it is not done, and
   I would rather write that here than let a reader assume it was.</p>

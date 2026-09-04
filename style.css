@@ -55,14 +55,19 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.25rem;
-  padding-bottom: 1.5rem;
+  gap: 0.25rem 1.5rem;
+  padding-bottom: 1rem;
   margin-bottom: 2.5rem;
   border-bottom: 1px solid var(--rule);
   font-size: 0.9375rem;
 }
 
-nav a { color: var(--main); text-decoration: none; }
+nav a {
+  color: var(--main);
+  text-decoration: none;
+  display: inline-block;
+  padding: 0.6rem 0;
+}
 nav a:hover { text-decoration: underline; }
 nav a[aria-current="page"] { font-weight: 600; text-decoration: underline; }
 nav .home { font-family: var(--font-heading); font-weight: 600; margin-right: auto; }
@@ -84,6 +89,14 @@ nav .home { font-family: var(--font-heading); font-weight: 600; margin-right: au
   border-left: 3px solid var(--accent);
   padding-left: 1.25rem;
   margin: 0 0 2.5rem;
+}
+
+.lead img { width: 40px; height: 40px; display: block; margin-bottom: 0.5rem; }
+
+.for-you {
+  margin: -1rem 0 2.25rem;
+  font-size: 1rem;
+  opacity: 0.85;
 }
 
 .cta { font-weight: 600; }
@@ -151,6 +164,12 @@ footer {
   margin-top: 4rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--rule);
-  font-size: 0.9375rem;
-  opacity: 0.85;
+  font-size: 1rem;
+  line-height: 2.4;
+  opacity: 0.9;
+}
+
+footer a {
+  display: inline-block;
+  padding: 0.55rem 0.35rem;
 }
