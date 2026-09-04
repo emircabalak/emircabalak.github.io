@@ -5,5 +5,5 @@
   <g fill="#E2703A">
     <circle cx="62" cy="36" r="4"/><circle cx="76" cy="50" r="4"/><circle cx="62" cy="64" r="4"/>
   </g>
-  <path d="M48 10v76" stroke="#16181D" stroke-width="2" stroke-dasharray="6 6"/>
+  <path d="M48 10v76" stroke="#8A8F98" stroke-width="2" stroke-dasharray="6 6"/>
 </svg>
