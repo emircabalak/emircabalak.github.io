@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leakage checker &middot; Emir Cabalak</title>
+<meta name="description" content="Paste a feature table and a label definition. It finds the column pairs that together rebuild the label, which no column-by-column check will surface.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a class="home" href="index.html">Emir Cabalak</a>
+  <a href="leak.html">Leak</a>
+  <a href="split.html">Split</a>
+  <a href="ladder.html">Ladder</a>
+  <a href="checker.html" aria-current="page">Checker</a>
+  <a href="about.html">About</a>
+</nav>
+
+<main>
+  <p class="kicker">A tool, not a case</p>
+  <h1>Leakage checker</h1>
+
+  <p>This is <a href="leak.html">case 1</a> turned into something you can run. Give it a feature
+  table and tell it which column is the label. It looks for pairs of columns that are harmless
+  on their own and together rebuild the thing you are trying to predict.</p>
+
+  <p>Everything runs in your browser. Your file is never uploaded and there is no server to
+  upload it to.</p>
+
+  <form id="f">
+    <label for="csv">Paste a CSV, header row first</label>
+    <textarea id="csv" rows="7" spellcheck="false" placeholder="client_id,total_queries,queries_with_data,label
+c001,1898,1044,0
+c002,412,180,1"></textarea>
+
+    <div class="row">
+      <span>
+        <label for="label">Label column</label>
+        <input id="label" value="label_visibility_drop" spellcheck="false">
+      </span>
+      <span>
+        <label for="thr">Ratio threshold</label>
+        <input id="thr" type="number" step="0.01" value="0.6">
+      </span>
+    </div>
+
+    <p class="meta">The threshold is the cut in your label definition. If your label is "the
+    ratio fell below 0.6", the threshold is 0.6.</p>
+
+    <div class="row">
+      <button type="submit">Check it</button>
+      <button type="button" id="demo" class="secondary">Load the example</button>
+    </div>
+  </form>
+
+  <div id="out"></div>
+
+  <h2>What the example is</h2>
+  <p>The example loads a 961 row feature table where I planted the exact failure from case 1:
+  the numerator and the denominator of the label ratio, taken from the outcome month and renamed
+  to something innocent. No single column in it correlates with the label above 0.16, so a
+  column-by-column review passes it. The pair reproduces the label on every row.</p>
+
+  <p class="next"><a href="leak.html">The case this came from, where the same leak cost me seven
+  points of AUC.</a></p>
+</main>
+
+<footer>
+  <a href="mailto:emircabalak1@gmail.com">emircabalak1@gmail.com</a> &middot;
+  <a href="https://github.com/emircabalak">GitHub</a> &middot;
+  <a href="https://www.linkedin.com/in/emircabalak/">LinkedIn</a> &middot;
+  <a href="Emir_Cabalak_CV.pdf">CV</a> &middot;
+  <a href="https://cal.com/emircabalak">Book a call</a> &middot; 2026
+</footer>
+
+<script src="checker.js"></script>
+<script>
+const out = document.getElementById("out");
+const csv = document.getElementById("csv");
+
+document.getElementById("demo").addEventListener("click", async () => {
+  out.innerHTML = '<p class="meta">Loading the example…</p>';
+  const r = await fetch("sample-features.csv");
+  csv.value = await r.text();
+  document.getElementById("label").value = "label_visibility_drop";
+  document.getElementById("thr").value = "0.6";
+  document.getElementById("f").requestSubmit();
+});
+
+document.getElementById("f").addEventListener("submit", e => {
+  e.preventDefault();
+  const text = csv.value.trim();
+  if (!text) { out.innerHTML = '<p class="verdict bad">Paste a CSV first, or load the example.</p>'; return; }
+  try {
+    const t0 = performance.now();
+    const res = run(text, document.getElementById("label").value.trim(), Number(document.getElementById("thr").value));
+    render(res, out);
+    out.insertAdjacentHTML("beforeend", `<p class="meta">Checked ${res.n} rows in ${Math.round(performance.now() - t0)}ms, entirely in this tab.</p>`);
+  } catch (err) {
+    out.innerHTML = `<p class="verdict bad">${err.message}</p>`;
+  }
+});
+</script>
+
+</body>
+</html>

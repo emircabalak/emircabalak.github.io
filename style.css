@@ -173,3 +173,65 @@ footer a {
   display: inline-block;
   padding: 0.55rem 0.35rem;
 }
+
+/* checker */
+
+form { margin: 1.75rem 0; }
+
+label {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--main);
+  margin-bottom: 0.35rem;
+}
+
+textarea, input {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 0.6rem 0.7rem;
+}
+
+textarea { resize: vertical; }
+textarea:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.row { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; align-items: flex-end; }
+.row > span { flex: 1 1 12rem; }
+
+button {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--paper);
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  padding: 0.7rem 1.2rem;
+  cursor: pointer;
+}
+
+button.secondary { color: var(--main); background: transparent; border-color: var(--main); }
+button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+.verdict {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.125rem;
+  border-left: 3px solid var(--rule);
+  padding-left: 1rem;
+  margin: 2rem 0 0.75rem;
+}
+
+.verdict.bad { border-left-color: var(--accent); }
+.verdict.good { border-left-color: var(--main); }
+
+.meta { font-size: 0.9375rem; opacity: 0.8; }
+
+tr.hit td { color: var(--accent); font-weight: 600; }
+
+#out h3 { margin-top: 1.75rem; }
