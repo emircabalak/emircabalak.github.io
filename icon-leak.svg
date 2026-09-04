@@ -1,10 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="Two columns joined by a bracket, marked as one leaking pair">
-  <rect width="96" height="96" fill="#FAF9F7"/>
-  <g stroke="#2E4B6B" stroke-width="2" fill="none" stroke-linecap="square">
+  <g stroke="#6E90B5" stroke-width="2" fill="none" stroke-linecap="square">
     <rect x="18" y="22" width="18" height="40"/>
     <rect x="60" y="22" width="18" height="40"/>
     <path d="M27 70v8h42v-8"/>
   </g>
-  <circle cx="48" cy="78" r="5" fill="#C2410C"/>
-  <path d="M48 86v6" stroke="#C2410C" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="48" cy="78" r="5" fill="#E2703A"/>
+  <path d="M48 86v6" stroke="#E2703A" stroke-width="2" stroke-linecap="round"/>
 </svg>
