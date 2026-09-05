@@ -22,7 +22,11 @@
 <meta name="twitter:image" content="https://emircabalak.github.io/share-card.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap">
+<!-- Loaded without blocking the first paint. The body stack is Segoe UI / Helvetica /
+     Arial, so text is readable before the webfont lands and swaps in. -->
+<link rel="stylesheet" media="print" onload="this.media='all'"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap"></noscript>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
