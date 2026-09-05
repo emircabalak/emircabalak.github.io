@@ -6,6 +6,20 @@
 <title>Leakage checker &middot; Emir Cabalak</title>
 <meta name="description" content="Paste a feature table and a label definition. It finds the column pairs that together rebuild the label, which no column-by-column check will surface.">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://emircabalak.github.io/checker.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Emir Cabalak">
+<meta property="og:url" content="https://emircabalak.github.io/checker.html">
+<meta property="og:title" content="Leakage checker &middot; Emir Cabalak">
+<meta property="og:description" content="Paste a feature table and a label definition. It finds the column pairs that together rebuild the label, which no column-by-column check will surface.">
+<meta property="og:image" content="https://emircabalak.github.io/share-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Emir Cabalak. I build machine learning models and then try to break my own results before anyone else can.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Leakage checker &middot; Emir Cabalak">
+<meta name="twitter:description" content="Paste a feature table and a label definition. It finds the column pairs that together rebuild the label, which no column-by-column check will surface.">
+<meta name="twitter:image" content="https://emircabalak.github.io/share-card.png">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -83,7 +97,14 @@ const csv = document.getElementById("csv");
 
 document.getElementById("demo").addEventListener("click", async () => {
   out.innerHTML = '<p class="meta">Loading the example…</p>';
-  const r = await fetch("sample-features.csv");
+  let r;
+  try {
+    r = await fetch("sample-features.csv");
+    if (!r.ok) throw new Error(r.status);
+  } catch {
+    out.innerHTML = '<p class="verdict bad">Could not load the example file. Check your connection and try again.</p>';
+    return;
+  }
   csv.value = await r.text();
   document.getElementById("label").value = "label_visibility_drop";
   document.getElementById("thr").value = "0.6";
@@ -96,11 +117,16 @@ document.getElementById("f").addEventListener("submit", e => {
   if (!text) { out.innerHTML = '<p class="verdict bad">Paste a CSV first, or load the example.</p>'; return; }
   try {
     const t0 = performance.now();
-    const res = run(text, document.getElementById("label").value.trim(), Number(document.getElementById("thr").value));
+    // An empty number input reads as "" and Number("") is 0, so a blank box would silently
+    // become a threshold of zero instead of asking.
+    const raw = document.getElementById("thr").value.trim();
+    const res = run(text, document.getElementById("label").value.trim(), raw === "" ? NaN : Number(raw));
     render(res, out);
     out.insertAdjacentHTML("beforeend", `<p class="meta">Checked ${res.n} rows in ${Math.round(performance.now() - t0)}ms, entirely in this tab.</p>`);
   } catch (err) {
-    out.innerHTML = `<p class="verdict bad">${err.message}</p>`;
+    // textContent, not innerHTML. The message can carry column names from the pasted file.
+    out.innerHTML = '<p class="verdict bad"></p>';
+    out.firstChild.textContent = err.message;
   }
 });
 </script>

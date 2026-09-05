@@ -36,10 +36,21 @@ function baselineOf(y) {
   return Math.max(p, 1 - p);
 }
 
+// Every pair is scanned against every row, so cost is columns squared times rows. Measured:
+// 40 columns over 20k rows takes 12 seconds with the tab frozen and no way to cancel. Refusing
+// with a number is better than looking dead.
+const MAX_WORK = 8e6;
+
 function pairScan(cols, head, labelName, threshold, minCoverage = 0.8) {
   const y = cols[labelName].values;
   const names = head.filter(h => h !== labelName && cols[h].numeric);
   const n = y.length;
+  const work = names.length * names.length * n;
+  if (work > MAX_WORK) {
+    throw new Error(`Too big to check in a browser tab: ${names.length} numeric columns over ` +
+      `${n} rows is about ${(work / 1e6).toFixed(0)} million comparisons and would freeze this ` +
+      `page for a while. Cut it to a sample of rows, or drop columns you already trust.`);
+  }
   const out = [];
   for (const a of names) {
     for (const b of names) {
@@ -68,7 +79,7 @@ function sentinelScan(cols, head, labelName) {
     if (!zeros) continue;
     const nonzero = v.filter(x => x !== 0);
     if (!nonzero.length) continue;
-    const floor = Math.min(...nonzero);
+    const floor = nonzero.reduce((m, x) => (x < m ? x : m), Infinity);
     const share = zeros / v.length;
     if (floor > 1 && share > 0.01) out.push({ column: h, zeros, share, floor });
   }
@@ -77,10 +88,18 @@ function sentinelScan(cols, head, labelName) {
 
 function fmt(x, d = 4) { return Number.isFinite(x) ? x.toFixed(d) : "n/a"; }
 
+// Column names come out of the pasted file and go into innerHTML. A header called
+// <img src=x onerror=...> used to execute. Everything from the file goes through here now.
+function esc(s) {
+  return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+
 function run(text, labelName, threshold) {
   const { head, cols, n } = parseCSV(text);
-  if (!cols[labelName]) throw new Error(`No column named "${labelName}". Columns found: ${head.join(", ")}`);
-  if (!cols[labelName].numeric) throw new Error(`"${labelName}" is not numeric. The label has to be 0 and 1.`);
+  if (!n) throw new Error("That is a header row with no data under it.");
+  if (!Number.isFinite(threshold)) throw new Error("The threshold has to be a number.");
+  if (!cols[labelName]) throw new Error(`No column named "${labelName}". Columns found: ${head.map(esc).join(", ")}`);
+  if (!cols[labelName].numeric) throw new Error(`"${esc(labelName)}" is not numeric. The label has to be 0 and 1.`);
 
   const y = cols[labelName].values;
   const base = baselineOf(y);
@@ -119,25 +138,25 @@ function render(res, el) {
   p.push(`<h3>Pairs, best five</h3><div class="table-scroll"><table><thead><tr><th>numerator</th><th>denominator</th><th class="num">agreement</th><th class="num">over baseline</th></tr></thead><tbody>`);
   for (const q of res.pairs.slice(0, 5)) {
     const over = q.agreement - res.base;
-    p.push(`<tr class="${over > 0.05 ? "hit" : ""}"><td><code>${q.a}</code></td><td><code>${q.b}</code></td><td class="num">${fmt(q.agreement)}</td><td class="num">${over >= 0 ? "+" : ""}${fmt(over)}</td></tr>`);
+    p.push(`<tr class="${over > 0.05 ? "hit" : ""}"><td><code>${esc(q.a)}</code></td><td><code>${esc(q.b)}</code></td><td class="num">${fmt(q.agreement)}</td><td class="num">${over >= 0 ? "+" : ""}${fmt(over)}</td></tr>`);
   }
   p.push(`</tbody></table></div>`);
 
   p.push(`<h3>Single columns, strongest five</h3><div class="table-scroll"><table><thead><tr><th>column</th><th class="num">correlation with label</th></tr></thead><tbody>`);
   for (const s of res.singles.slice(0, 5)) {
-    p.push(`<tr class="${Math.abs(s.r) > 0.5 ? "hit" : ""}"><td><code>${s.column}</code></td><td class="num">${fmt(s.r)}</td></tr>`);
+    p.push(`<tr class="${Math.abs(s.r) > 0.5 ? "hit" : ""}"><td><code>${esc(s.column)}</code></td><td class="num">${fmt(s.r)}</td></tr>`);
   }
   p.push(`</tbody></table></div>`);
 
   if (res.realPairs.length) {
     const top = res.realPairs[0];
-    p.push(`<p>The strongest single column here is <code>${res.singles[0].column}</code> at ${fmt(res.singles[0].r)}. Nobody investigates that. But <code>${top.a}</code> divided by <code>${top.b}</code> reproduces the label on ${fmt(top.agreement)} of ${top.rows} rows, which is ${fmt(top.agreement - res.base)} above chance.</p>`);
+    p.push(`<p>The strongest single column here is <code>${esc(res.singles[0].column)}</code> at ${fmt(res.singles[0].r)}. Nobody investigates that. But <code>${esc(top.a)}</code> divided by <code>${esc(top.b)}</code> reproduces the label on ${fmt(top.agreement)} of ${top.rows} rows, which is ${fmt(top.agreement - res.base)} above chance.</p>`);
   }
 
   if (res.sentinels.length) {
     p.push(`<h3>Not leakage, but wrong anyway</h3><ul>`);
     for (const s of res.sentinels) {
-      p.push(`<li><code>${s.column}</code> has ${s.zeros} zeros (${(s.share * 100).toFixed(1)}%) and its smallest non-zero value is ${s.floor}. A zero sitting that far below the floor is usually a missing marker, and any average over it is wrong before leakage is even a question.</li>`);
+      p.push(`<li><code>${esc(s.column)}</code> has ${s.zeros} zeros (${(s.share * 100).toFixed(1)}%) and its smallest non-zero value is ${s.floor}. A zero sitting that far below the floor is usually a missing marker, and any average over it is wrong before leakage is even a question.</li>`);
     }
     p.push(`</ul>`);
   }
